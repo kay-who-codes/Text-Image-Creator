@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspirational Message Creator</title>
+    <style>
+        :root {
+            --primary-accent: #4caf50;
+            --secondary-accent: #ff4081;
+            --bg-dark: #131313;
+            --text-light: #ffffff;
+            --text-secondary: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-accent), var(--secondary-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .controls-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .preview-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-accent);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: var(--transition);
+            min-height: 48px;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            transform: translateY(-1px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        .color-input-group {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.5rem;
+            align-items: end;
+        }
+
+        input[type="color"] {
+            width: 60px;
+            height: 48px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        input[type="color"]:hover {
+            transform: scale(1.05);
+        }
+
+        .phone-preview {
+            width: 280px;
+            height: 500px;
+            background: #000;
+            border-radius: 25px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 
+                0 0 0 8px #333,
+                0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1.5rem;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: var(--transition);
+        }
+
+        .message-display {
+            font-size: 1.4rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            word-wrap: break-word;
+            max-width: 100%;
+            white-space: pre-line; /* This preserves line breaks */
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, var(--primary-accent), #66bb6a);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            min-height: 48px;
+            width: 100%;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .gradient-presets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .gradient-preset {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .gradient-preset:hover {
+            border-color: var(--primary-accent);
+            transform: scale(1.1);
+        }
+
+        .gradient-preset.active {
+            border-color: var(--secondary-accent);
+            box-shadow: 0 0 0 2px var(--secondary-accent);
+        }
+
+        .font-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-accent);
+        }
+
+        .gradient-controls {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .gradient-direction {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .direction-btn {
+            background: var(--bg-dark);
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .direction-btn:hover {
+            border-color: var(--primary-accent);
+            color: var(--text-light);
+        }
+
+        .direction-btn.active {
+            background: var(--primary-accent);
+            border-color: var(--primary-accent);
+            color: white;
+        }
+
+        .custom-gradient-colors {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .color-picker-group {
+            text-align: center;
+        }
+
+        .color-picker-group label {
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 60px;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            border: 2px solid var(--border-color);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 767px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            header {
+                padding: 1.5rem 0;
+            }
+
+            .controls-section,
+            .preview-section {
+                padding: 1.5rem;
+            }
+
+            .phone-preview {
+                width: 240px;
+                height: 420px;
+                padding: 15px;
+            }
+
+            .message-display {
+                font-size: 1.2rem;
+            }
+
+            .font-controls {
+                grid-template-columns: 1fr;
+            }
+
+            .custom-gradient-colors {
+                grid-template-columns: 1fr;
+            }
+
+            .gradient-direction {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Touch-friendly adjustments */
+        @media (hover: none) and (pointer: coarse) {
+            input, textarea, select, button {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+        }
+
+        /* Animation keyframes */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .controls-section,
+        .preview-section {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .preview-section {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Inspirational Message Creator</h1>
+            <p class="subtitle">Create beautiful phone-sized inspirational images</p>
+        </header>
+
+        <main>
+            <section class="controls-section" role="form" aria-label="Message customization controls">
+                <h2 class="section-title">Customize Your Message</h2>
+                
+                <div class="form-group">
+                    <label for="messageText">Your Inspirational Message</label>
+                    <textarea 
+                        id="messageText" 
+                        placeholder="Enter your inspirational message here..."
+                        aria-describedby="messageHelp"
+                    >Believe in yourself
+and all that you are.
+Dream big!</textarea>
+                    <small id="messageHelp" style="color: var(--text-secondary); font-size: 0.8rem;">
+                        Use Enter/Return for line breaks. Keep it concise for better readability.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="fontSize">Font Size</label>
+                    <div class="font-controls">
+                        <input 
+                            type="range" 
+                            id="fontSize" 
+                            min="16" 
+                            max="32" 
+                            value="22"
+                            aria-label="Adjust font size"
+                        >
+                        <select id="fontFamily" aria-label="Choose font family">
+                            <option value="system">System Font</option>
+                            <option value="serif">Serif</option>
+                            <option value="monospace">Monospace</option>
+                            <option value="cursive">Cursive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="textColor">Text Color</label>
+                    <div class="color-input-group">
+                        <input 
+                            type="text" 
+                            id="textColorHex" 
+                            value="#ffffff" 
+                            placeholder="#ffffff"
+                            aria-label="Text color hex code"
+                        >
+                        <input 
+                            type="color" 
+                            id="textColor" 
+                            value="#ffffff"
+                            aria-label="Text color picker"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Background Options</label>
+                    
+                    <!-- Gradient Presets -->
+                    <div style="margin-bottom: 1rem;">
+                        <small style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 0.5rem; display: block;">
+                            Quick Presets
+                        </small>
+                        <div class="gradient-presets" role="radiogroup" aria-label="Background gradient presets">
+                            <div class="gradient-preset active" 
+                                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                                 data-gradient="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                                 data-color1="#667eea"
+                                 data-color2="#764ba2"
+                                 role="radio" 
+                                 aria-checked="true"
+                                 tabindex="0"></div>
+                            <div class="gradient-preset" 
+                                 style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+                                 data-gradient="linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+                                 data-color1="#f093fb"
+                                 data-color2="#f5576c"
+                                 role="radio" 
+                                 aria-checked="false"
+                                 tabindex="0"></div>
+                            <div class="gradient-preset" 
+                                 style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+                                 data-gradient="linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+                                 data-color1="#4facfe"
+                                 data-color2="#00f2fe"
+                                 role="radio" 
+                                 aria-checked="false"
+                                 tabindex="0"></div>
+                            <div class="gradient-preset" 
+                                 style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+                                 data-gradient="linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+                                 data-color1="#43e97b"
+                                 data-color2="#38f9d7"
+                                 role="radio" 
+                                 aria-checked="false"
+                                 tabindex="0"></div>
+                            <div class="gradient-preset" 
+                                 style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+                                 data-gradient="linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+                                 data-color1="#fa709a"
+                                 data-color2="#fee140"
+                                 role="radio" 
+                                 aria-checked="false"
+                                 tabindex="0"></div>
+                            <div class="gradient-preset" 
+                                 style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+                                 data-gradient="linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
+                                 data-color1="#a8edea"
+                                 data-color2="#fed6e3"
+                                 role="radio" 
+                                 aria-checked="false"
+                                 tabindex="0"></div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Gradient Controls -->
+                    <div class="gradient-controls">
+                        <small style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 1rem; display: block;">
+                            Custom Gradient
+                        </small>
+                        
+                        <div class="custom-gradient-colors">
+                            <div class="color-picker-group">
+                                <label for="gradientColor1">Start Color</label>
+                                <input 
+                                    type="color" 
+                                    id="gradientColor1" 
+                                    value="#667eea"
+                                    aria-label="Gradient start color"
+                                >
+                            </div>
+                            <div class="color-picker-group">
+                                <label for="gradientColor2">End Color</label>
+                                <input 
+                                    type="color" 
+                                    id="gradientColor2" 
+                                    value="#764ba2"
+                                    aria-label="Gradient end color"
+                                >
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1rem;">
+                            <small style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 0.5rem; display: block;">
+                                Gradient Direction
+                            </small>
+                            <div class="gradient-direction">
+                                <button class="direction-btn active" data-direction="135deg">↘</button>
+                                <button class="direction-btn" data-direction="90deg">↓</button>
+                                <button class="direction-btn" data-direction="45deg">↗</button>
+                                <button class="direction-btn" data-direction="0deg">→</button>
+                            </div>
+                        </div>
+
+                        <div class="color-preview" id="gradientPreview"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="preview-section" role="region" aria-label="Message preview">
+                <h2 class="section-title">Preview</h2>
+                
+                <div class="phone-preview" aria-label="Phone screen preview">
+                    <div class="phone-screen" id="phoneScreen">
+                        <div class="message-display" id="messageDisplay">
+                            Believe in yourself
+and all that you are.
+Dream big!
+                        </div>
+                    </div>
+                </div>
+
+                <button class="download-btn" id="downloadBtn" aria-label="Download inspirational message image">
+                    Download Image
+                </button>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Get DOM elements
+        const messageText = document.getElementById('messageText');
+        const fontSize = document.getElementById('fontSize');
+        const fontFamily = document.getElementById('fontFamily');
+        const textColor = document.getElementById('textColor');
+        const textColorHex = document.getElementById('textColorHex');
+        const messageDisplay = document.getElementById('messageDisplay');
+        const phoneScreen = document.getElementById('phoneScreen');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const gradientPresets = document.querySelectorAll('.gradient-preset');
+        const gradientColor1 = document.getElementById('gradientColor1');
+        const gradientColor2 = document.getElementById('gradientColor2');
+        const gradientPreview = document.getElementById('gradientPreview');
+        const directionBtns = document.querySelectorAll('.direction-btn');
+
+        let currentGradient = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        let currentDirection = '135deg';
+        let isUsingCustomGradient = false;
+
+        // Update message display - now preserves line breaks
+        function updateMessage() {
+            const text = messageText.value || 'Enter your message above';
+            messageDisplay.textContent = text; // textContent preserves line breaks with white-space: pre-line
+        }
+
+        // Update font size
+        function updateFontSize() {
+            const size = fontSize.value;
+            messageDisplay.style.fontSize = size + 'px';
+        }
+
+        // Update font family
+        function updateFontFamily() {
+            const family = fontFamily.value;
+            let fontStack = '';
+            
+            switch(family) {
+                case 'serif':
+                    fontStack = 'Georgia, Times, "Times New Roman", serif';
+                    break;
+                case 'monospace':
+                    fontStack = '"Courier New", Courier, monospace';
+                    break;
+                case 'cursive':
+                    fontStack = '"Brush Script MT", cursive';
+                    break;
+                default:
+                    fontStack = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif';
+            }
+            
+            messageDisplay.style.fontFamily = fontStack;
+        }
+
+        // Update text color
+        function updateTextColor() {
+            const color = textColor.value;
+            messageDisplay.style.color = color;
+            textColorHex.value = color;
+        }
+
+        // Update text color from hex input
+        function updateTextColorFromHex() {
+            const color = textColorHex.value;
+            if (/^#[0-9A-F]{6}$/i.test(color)) {
+                textColor.value = color;
+                messageDisplay.style.color = color;
+            }
+        }
+
+        // Update custom gradient
+        function updateCustomGradient() {
+            const color1 = gradientColor1.value;
+            const color2 = gradientColor2.value;
+            currentGradient = `linear-gradient(${currentDirection}, ${color1} 0%, ${color2} 100%)`;
+            
+            // Update preview
+            gradientPreview.style.background = currentGradient;
+            
+            // If using custom gradient, update phone screen
+            if (isUsingCustomGradient) {
+                phoneScreen.style.background = currentGradient;
+            }
+        }
+
+        // Handle gradient preset selection
+        function selectGradientPreset(preset) {
+            isUsingCustomGradient = false;
+            
+            // Remove active class from all presets
+            gradientPresets.forEach(p => {
+                p.classList.remove('active');
+                p.setAttribute('aria-checked', 'false');
+            });
+            
+            // Add active class to selected preset
+            preset.classList.add('active');
+            preset.setAttribute('aria-checked', 'true');
+            
+            // Update background
+            currentGradient = preset.dataset.gradient;
+            phoneScreen.style.background = currentGradient;
+            
+            // Update custom color pickers to match preset
+            if (preset.dataset.color1 && preset.dataset.color2) {
+                gradientColor1.value = preset.dataset.color1;
+                gradientColor2.value = preset.dataset.color2;
+                updateCustomGradient();
+            }
+        }
+
+        // Handle gradient direction change
+        function selectDirection(btn) {
+            // Remove active class from all direction buttons
+            directionBtns.forEach(b => b.classList.remove('active'));
+            
+            // Add active class to selected button
+            btn.classList.add('active');
+            
+            // Update direction
+            currentDirection = btn.dataset.direction;
+            updateCustomGradient();
+        }
+
+        // Use custom gradient
+        function useCustomGradient() {
+            isUsingCustomGradient = true;
+            
+            // Remove active class from all presets
+            gradientPresets.forEach(p => {
+                p.classList.remove('active');
+                p.setAttribute('aria-checked', 'false');
+            });
+            
+            // Update phone screen with custom gradient
+            updateCustomGradient();
+        }
+
+        // Enhanced download functionality with line break support
+        function downloadImage() {
+            // Create a canvas
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size (phone screen dimensions)
+            canvas.width = 280 * 2; // Double for better quality
+            canvas.height = 500 * 2;
+            
+            // Scale context for high DPI
+            ctx.scale(2, 2);
+            
+            // Create gradient background
+            let gradient;
+            
+            // Parse gradient direction
+            if (currentDirection === '135deg') {
+                gradient = ctx.createLinearGradient(0, 0, 280, 500);
+            } else if (currentDirection === '90deg') {
+                gradient = ctx.createLinearGradient(0, 0, 0, 500);
+            } else if (currentDirection === '45deg') {
+                gradient = ctx.createLinearGradient(0, 500, 280, 0);
+            } else { // 0deg
+                gradient = ctx.createLinearGradient(0, 0, 280, 0);
+            }
+            
+            // Use current colors
+            const color1 = gradientColor1.value;
+            const color2 = gradientColor2.value;
+            
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
+            
+            // Fill background
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 280, 500);
+            
+            // Set text properties
+            ctx.fillStyle = textColor.value;
+            ctx.font = `600 ${fontSize.value}px ${getComputedStyle(messageDisplay).fontFamily}`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Add text shadow
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetY = 2;
+            
+            // Handle text with line breaks
+            const text = messageText.value || 'Enter your message above';
+            const lines = text.split('\n'); // Split by actual line breaks first
+            const maxWidth = 240; // Max width for text
+            const lineHeight = parseInt(fontSize.value) * 1.4;
+            
+            // Process each line for word wrapping
+            const finalLines = [];
+            lines.forEach(line => {
+                if (line.trim() === '') {
+                    finalLines.push(''); // Preserve empty lines
+                    return;
+                }
+                
+                const words = line.split(' ');
+                let currentLine = '';
+                
+                for (let n = 0; n < words.length; n++) {
+                    const testLine = currentLine + words[n] + ' ';
+                    const metrics = ctx.measureText(testLine);
+                    const testWidth = metrics.width;
+                    
+                    if (testWidth > maxWidth && n > 0) {
+                        finalLines.push(currentLine.trim());
+                        currentLine = words[n] + ' ';
+                    } else {
+                        currentLine = testLine;
+                    }
+                }
+                if (currentLine.trim()) {
+                    finalLines.push(currentLine.trim());
+                }
+            });
+            
+            // Calculate starting Y position for vertical centering
+            const totalHeight = finalLines.length * lineHeight;
+            let startY = (500 - totalHeight) / 2 + lineHeight / 2;
+            
+            // Draw each line
+            finalLines.forEach((line, index) => {
+                const y = startY + (index * lineHeight);
+                ctx.fillText(line, 140, y);
+            });
+            
+            // Download the image
+            const link = document.createElement('a');
+            link.download = 'inspirational-message.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // Event listeners
+        messageText.addEventListener('input', updateMessage);
+        fontSize.addEventListener('input', updateFontSize);
+        fontFamily.addEventListener('change', updateFontFamily);
+        textColor.addEventListener('input', updateTextColor);
+        textColorHex.addEventListener('input', updateTextColorFromHex);
+        downloadBtn.addEventListener('click', downloadImage);
+
+        // Custom gradient event listeners
+        gradientColor1.addEventListener('input', () => {
+            useCustomGradient();
+        });
+
+        gradientColor2.addEventListener('input', () => {
+            useCustomGradient();
+        });
+
+        // Gradient preset event listeners
+        gradientPresets.forEach(preset => {
+            preset.addEventListener('click', () => selectGradientPreset(preset));
+            preset.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    selectGradientPreset(preset);
+                }
+            });
+        });
+
+        // Direction button event listeners
+        directionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectDirection(btn);
+                if (isUsingCustomGradient) {
+                    phoneScreen.style.background = currentGradient;
+                }
+            });
+        });
+
+        // Initialize the display
+        updateMessage();
+        updateFontSize();
+        updateFontFamily();
+        updateTextColor();
+        updateCustomGradient();
+
+        // Handle form submission prevention
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+            }
+        });
+
+        // Add smooth transitions for better UX
+        messageDisplay.style.transition = 'all 0.3s ease';
+        phoneScreen.style.transition = 'background 0.3s ease';
+    </script>
+</body>
+</html>
